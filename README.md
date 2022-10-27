@@ -10,3 +10,4 @@ Currently all of the ML is done with [Stable Diffusion](https://github.com/CompV
   -  Maybe img2img without current 'prompt hacking'
 - Allow option for image or text input
 - Integrate Rekordbox code for music sync and think about output methods 
+- Control quality/speed trade off for a fixed generation time 
