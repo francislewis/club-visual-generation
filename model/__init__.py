@@ -6,11 +6,11 @@ class Model:
     """
 
     def __init__(self, _valid_kwargs=tuple(), **kwargs):
-
-        _valid_kwargs += ('model_name',  )
+        _valid_kwargs += ('model_name',)
         for k, v in kwargs.items():
             if k not in _valid_kwargs:
                 raise ValueError("Keyword argument '{}' not supported".format(k))
+
 
     def gen_txt2img(self, prompt):
         """
