@@ -14,7 +14,7 @@ class SD_GPU_V1_4(Model):
         # Add valid kwargs
         kwargs['_valid_kwargs'] = kwargs.get('_valid_kwargs', tuple()) + ('steps',)
         super().__init__(**kwargs)
-        self.steps = kwargs.pop('steps')
+        self.steps = kwargs.pop('steps','')
 
 
     def gen_txt2img(self, prompt):
@@ -31,4 +31,4 @@ class SD_GPU_V1_4(Model):
 
 # ############ Example ############
 # GPU_img2img_test_object = SD_GPU_V1_4()
-# print(GPU_img2img_test_object.test_cpu(prompt="Horse riding on an astronaut"))
+# print(GPU_img2img_test_object.gen_txt2img(prompt="Horse riding on an astronaut"))
