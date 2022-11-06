@@ -24,11 +24,13 @@ class APPLE_M_V1_4(Model):
         if self.run_num == 0:
             pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-v1-4", height=self.height, width=self.width, num_inference_steps=1)
             pipe = pipe.to("mps")
+            pipe.enable_attention_slicing()
             first_run = pipe(prompt).images[0]
             print("Setup Run")
 
         pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-v1-4", height=self.height, width=self.width, num_inference_steps=self.steps)
         pipe = pipe.to("mps")
+        pipe.enable_attention_slicing()
         image = pipe(prompt).images[0]
         self.run_num +=1
         return image
