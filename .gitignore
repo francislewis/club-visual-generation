@@ -129,7 +129,7 @@ cython_debug/
 .idea/
 
 # Large Models
-stable-diffusion-v1-4/
+stable-diffusion-v1-4
 
 # Finder
 .DS_Store

@@ -6,6 +6,7 @@ from __init__ import Model
 class SD_GPU_V1_4(Model):
     def __init__(self, height=512, width=768, **kwargs):
         """
+        Use this for Google Colab
         steps - Number of inference steps, lower is worse quality but faster
         TODO: should this move to gen() in order to adjust quality depending on output speed?
         """
