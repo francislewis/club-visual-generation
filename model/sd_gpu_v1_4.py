@@ -1,6 +1,6 @@
 import torch
 from diffusers import StableDiffusionPipeline
-from __init__ import Model
+from model import Model
 
 
 class SD_GPU_V1_4(Model):
