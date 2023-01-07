@@ -11,10 +11,11 @@ class sd_videos(Model):
         self.height = height
         self.width = width
         # Add valid kwargs
-        kwargs['_valid_kwargs'] = kwargs.get('_valid_kwargs', tuple()) + ('steps', 'output_dir',)
+        kwargs['_valid_kwargs'] = kwargs.get('_valid_kwargs', tuple()) + ('steps', 'output_dir', 'interpolation_steps',)
         super().__init__(**kwargs)
         self.steps = kwargs.pop('steps', '')
         self.output_dir = kwargs.pop('output_dir', '')
+        self.interpolation_steps = kwargs.pop('interpolation_steps', '')
 
 
     def gen_txt2vid(self, prompts, sub_directory):
@@ -39,7 +40,7 @@ class sd_videos(Model):
         pipe.walk(
             prompts=self.prompts,
             seeds=random.sample(range(1, 100), len(prompts)),
-            num_interpolation_steps=3,
+            num_interpolation_steps=self.interpolation_steps,
             height=self.height,  # use multiples of 64 if > 512. Multiples of 8 if < 512.
             width=self.width,  # use multiples of 64 if > 512. Multiples of 8 if < 512.
             output_dir=self.output_dir,  # Where images/videos will be saved
@@ -50,6 +51,6 @@ class sd_videos(Model):
 
         return sub_directory
 
-############ Example ############
-sd_videos_test_object = sd_videos(steps=3, output_dir='test_vid')
-print(sd_videos_test_object.gen_txt2vid(prompts=["Horse riding on an astronaut", "Astronaut riding on a horse"], sub_directory='2'))
+# ############ Example ############
+# sd_videos_test_object = sd_videos(steps=3, output_dir='test_vid', self.interpolation_steps=3)
+# print(sd_videos_test_object.gen_txt2vid(prompts=["Horse riding on an astronaut", "Astronaut riding on a horse"], sub_directory='2'))

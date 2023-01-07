@@ -16,3 +16,10 @@ for i in range(iterations):
         prompt_list.append(prompt)
 
 print(len(prompt_list))
+
+# Generate a test video:
+from model.sd_videos import sd_videos
+
+sd_videos_test_object = sd_videos(steps=3, output_dir='test_vid', interpolation_steps=5)
+print(sd_videos_test_object.gen_txt2vid(prompts=prompt_list, sub_directory='1'))
+
