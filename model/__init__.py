@@ -11,6 +11,7 @@ class Model:
             if k not in _valid_kwargs:
                 raise ValueError("Keyword argument '{}' not supported".format(k))
 
+        self.is_running = False
 
     def gen_txt2img(self, prompt):
         """
