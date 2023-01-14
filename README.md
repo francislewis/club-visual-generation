@@ -1,6 +1,6 @@
 # club-visual-generation
 
-Software to generate interactive visuals in a club-night enviroment
+Software to generate interactive visuals in a club-night environment
 
 Currently all of the ML is done with [Stable Diffusion](https://github.com/CompVis/stable-diffusion).
 

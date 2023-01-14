@@ -2,3 +2,6 @@ TODO:
 - Toggle NSFW filter
 - Write code to randomise/re run if NSFW=true until we get safe results
 - Could optimise the num_inference_steps on the fly by generation time
+
+Could build a pipeline class which takes image or prompt as input and always returns a video file
+Just want to make sure it can be customisable and flexible enough
