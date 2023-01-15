@@ -4,6 +4,7 @@ import torch
 import random
 import os
 
+
 class sd_videos(Model):
     def __init__(self, height=512, width=768, **kwargs):
         """
@@ -12,18 +13,22 @@ class sd_videos(Model):
             steps - Number of inference steps, lower is worse quality but faster
             interpolation steps
             platform - ['SLOW', 'CUDA', 'MPS', 'CoreML']
+            nsfw_filter - Boolean, default False
         """
 
+        # Add valid kwargs
+        kwargs['_valid_kwargs'] = kwargs.get('_valid_kwargs', tuple()) + (
+            'steps', 'output_dir', 'interpolation_steps', 'platform', 'nsfw_filter')
+        super().__init__(**kwargs)
+
+        # Set internal variables
         self.height = height
         self.width = width
-        # Add valid kwargs
-        kwargs['_valid_kwargs'] = kwargs.get('_valid_kwargs', tuple()) + ('steps', 'output_dir', 'interpolation_steps', 'platform',)
-        super().__init__(**kwargs)
         self.steps = kwargs.pop('steps', '')
         self.output_dir = kwargs.pop('output_dir', '')
         self.interpolation_steps = kwargs.pop('interpolation_steps', '')
         self.platform = kwargs.pop('platform', 'SLOW')
-
+        self.nsfw_filter = kwargs.pop('nsfw_filter', False)
 
     def gen_txt2vid(self, prompts, sub_directory):
         """
@@ -39,13 +44,14 @@ class sd_videos(Model):
         path = os.getcwd()
         sd_model_path = os.path.join(path, 'model', 'stable-diffusion-v1-4')
 
-        # Create different pipelines depending on target platform
+        # Create different self.pipelines depending on target platform
         if self.platform == 'SLOW':
             # For low vram (very slow) - requires: 'pip install accelerate'
-            pipe = StableDiffusionWalkPipeline.from_pretrained(sd_model_path)
+            self.pipe = StableDiffusionWalkPipeline.from_pretrained(sd_model_path)
 
         elif self.platform == 'CUDA':
-            pipe = StableDiffusionWalkPipeline.from_pretrained(sd_model_path, torch_dtype=torch.float16, revision="fp16").to("cuda")
+            self.pipe = StableDiffusionWalkPipeline.from_pretrained(sd_model_path, torch_dtype=torch.float16,
+                                                               revision="fp16").to("cuda")
 
         elif self.platform == 'MPS':
             raise NotImplementedError
@@ -56,13 +62,14 @@ class sd_videos(Model):
         else:
             print(str(self.platform) + " is not a valid platform. Please try again with 'SLOW','CUDA' or 'MPS'")
 
-        # Turn off NSFW filter
-        def safety_checker(images, clip_input):
-            return images, False
-        pipe.safety_checker = safety_checker
-
+        # Toggle NSFW filter
+        if not self.nsfw_filter:
+            def safety_checker(images, clip_input):
+                return images, False
+            self.pipe.safety_checker = safety_checker
+        
         # Call SD_videos
-        pipe.walk(
+        self.pipe.walk(
             prompts=self.prompts,
             seeds=random.sample(range(1, 100), len(prompts)),
             num_interpolation_steps=self.interpolation_steps,
