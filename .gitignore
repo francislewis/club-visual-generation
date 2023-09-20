@@ -130,6 +130,7 @@ cython_debug/
 
 # Large Models
 stable-diffusion-v1-4
+deforum
 
 # Test exports
 test_vid
