@@ -129,6 +129,8 @@ cython_debug/
 .idea/
 
 # Large Models
+model/stable-diffusion-v1-4
+model/deforum
 stable-diffusion-v1-4
 deforum
 

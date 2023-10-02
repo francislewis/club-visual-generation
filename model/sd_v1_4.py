@@ -22,9 +22,9 @@ class sd_v1_4(Model):
         self.height = height
         self.width = width
         self.steps = kwargs.pop('steps', '30')
-        self.platform = kwargs.pop('platform', 'SLOW')
+        self.platform = kwargs.pop('platform', 'MPS')
         self.run_num = 0
-        self.nsfw_filter = kwargs.pop('nsfw_filter', False)
+        self.nsfw_filter = kwargs.pop('nsfw_filter', None)
 
 
     def gen_txt2img(self, prompt):
@@ -40,14 +40,14 @@ class sd_v1_4(Model):
         elif self.platform == 'CUDA':
             # Note: revision="fp16" uses less VRAM
             self.pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-v1-4", revision="fp16",
-                                                       torch_dtype=torch.float16, height=self.height, width=self.width, num_inference_steps=self.steps)to("cuda")
+                                                       torch_dtype=torch.float16, height=self.height, width=self.width, num_inference_steps=self.steps).to("cuda")
 
         elif self.platform == 'MPS':
             # There is apparently a problem with MPS on Apple Silicon causing the first inference to be very slow
             # This attempts to get around it by running a quick 1-step inference if it's the first run then runs again
             if self.run_num == 0:
                 print("Setup Run Starting")
-                self.pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-v1-4", height=self.height,
+                self.pipe = StableDiffusionPipeline.from_pretrained("./model/stable-diffusion-v1-4", height=self.height,
                                                                width=self.width, num_inference_steps=1).to("mps")
                 self.pipe.enable_attention_slicing()
                 self.pipe(self.prompt)
@@ -59,7 +59,7 @@ class sd_v1_4(Model):
                 self.__init__(height = self.height, width = self.width, steps = self.steps, platform = self.platform)
 
             else:
-                self.pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-v1-4", height=self.height,
+                self.pipe = StableDiffusionPipeline.from_pretrained("./model/stable-diffusion-v1-4", height=self.height,
                                                                width=self.width, num_inference_steps=self.steps).to("mps")
                 self.pipe.enable_attention_slicing()
 
